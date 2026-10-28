@@ -22,15 +22,12 @@
 .camera-frame video{height:100%;min-height:0;object-fit:contain}
 .section-heading h1{font-size:clamp(30px,4.8vw,54px);line-height:1.08;max-width:900px;margin-inline:auto}
 html{filter:sepia(.5) contrast(.85) saturate(1.2)}
-:root{--font-texture-contrast:2.2;--font-texture-size:68px}
 @font-face{font-family:'The Meshroom';src:url('assets/TheMeshroom-3zaXL.ttf') format('truetype');font-weight:normal;font-style:normal;font-display:swap}
 *{font-family:'The Meshroom',Arial,sans-serif!important}
 .film-description{display:block;padding:3px 10px 12px;color:#e1dcc6;font-size:12px;line-height:1.35;text-align:left}
-.textured-letters,h1,.choice-title,.film-name,.capture-button>span:last-child,.player-title{background-image:url('assets/paper-overlay.jpg'),linear-gradient(var(--letter-color,#3b7135),var(--letter-color,#3b7135));background-repeat:repeat,no-repeat;background-size:var(--font-texture-size) var(--font-texture-size),100% 100%;background-blend-mode:multiply;background-clip:text;-webkit-background-clip:text;color:transparent;-webkit-text-fill-color:transparent;filter:contrast(var(--font-texture-contrast))}
-h1{--letter-color:#292216;-webkit-text-stroke:1.5px #e1dc69;text-shadow:2px 3px #211d14,4px 5px #5a523a}
-.choice-title{--letter-color:#ead7aa;-webkit-text-stroke:.5px #332b1e;text-shadow:1px 2px #241d14}
-.film-name,.player-title{--letter-color:#f0d58b}
-.capture-button>span:last-child{--letter-color:#33251a}
+h1{color:#292216;-webkit-text-fill-color:#292216;-webkit-text-stroke:1.5px #e1dc69;text-shadow:2px 3px #211d14,4px 5px #5a523a}
+.choice-title{color:#f0ddb2;-webkit-text-fill-color:#f0ddb2;-webkit-text-stroke:0;text-shadow:1px 2px #241d14}
+.film-name,.player-title{color:#f0d58b;-webkit-text-fill-color:#f0d58b}
 .choice-card{border:9px ridge #77725e;border-radius:2px;background-image:linear-gradient(180deg,#80745da8,#282920dc),url('assets/backgrounds/web/001.jpg');background-size:cover;background-position:center;box-shadow:4px 7px 0 #1e201a,inset 0 2px 3px #fff8;color:#f0ddb2;text-shadow:1px 2px #211b14}
 .choice-art{border:6px ridge #777966;background-image:linear-gradient(#354a3dcc,#23362fd9),url('assets/backgrounds/web/004.jpg');background-size:cover;background-position:center;box-shadow:2px 4px #161d18}
 .icon-button,.capture-button,.button{border:6px ridge #77725e;border-radius:3px;background-image:linear-gradient(180deg,#918267c9,#4b463bdf),url('assets/backgrounds/web/002.jpg');background-size:cover;background-position:center;color:#f1dcb0;text-shadow:1px 2px #211b14;box-shadow:3px 5px 0 #292720,inset 0 2px 3px #fff8}
@@ -40,3 +37,4 @@ h1{--letter-color:#292216;-webkit-text-stroke:1.5px #e1dc69;text-shadow:2px 3px 
 .film-card{border:8px ridge #526861;box-shadow:3px 5px 0 #24251f,inset 0 0 0 2px #cad1ad}
 .camera-frame{border:13px ridge #777766;box-shadow:5px 7px 0 #292b24,0 0 0 3px #d3c7a3}
 .camera-placeholder{background-image:linear-gradient(#31443bd9,#1a2823e8),url('assets/backgrounds/web/010.jpg');background-size:cover;background-position:center}
+.capture-button.recording{clip-path:none;border-radius:3px;background:#9f2d21;color:#fff1cf;-webkit-text-fill-color:#fff1cf;text-shadow:1px 2px #50130c;filter:none}
