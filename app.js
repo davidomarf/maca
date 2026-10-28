@@ -168,8 +168,8 @@ function playClip(title, filename) {
   $('filmPlayer').src = `assets/videos/${filename}`;
   $('playerTitle').textContent = title;
   showScreen('player');
-  $('filmPlayer').play().catch(() => showToast('Agrega el archivo MP4 correspondiente en assets/videos/'));
-  $('filmPlayer').onerror = () => showToast('Agrega el archivo MP4 correspondiente en assets/videos/');
+  $('filmPlayer').play().catch(() => showToast('No se pudo reproducir el video'));
+  $('filmPlayer').onerror = () => showToast('No se pudo reproducir el video');
 }
 
 $('wallpaper').style.backgroundImage = `url('assets/backgrounds/web/${screenBackgrounds.attract}')`;
