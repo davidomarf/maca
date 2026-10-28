@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#aaa18a">
+  <title>Compostaje fílmico y formas de encuentro</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main id="app" class="app">
+    <video id="ambient" class="ambient" autoplay muted loop playsinline aria-hidden="true">
+      <source src="assets/ambient-loop.mp4" type="video/mp4">
+    </video>
+    <div id="wallpaper" class="wallpaper" aria-hidden="true"></div>
+    <div class="ambient-fallback" aria-hidden="true"></div>
+    <div class="grain" aria-hidden="true"></div>
+    <div class="shell">
+      <section id="attract" class="screen attract-screen" aria-label="Video principal">
+        <video class="main-loop" autoplay muted loop playsinline aria-label="Video principal en repetición"><source src="assets/ambient-loop.mp4" type="video/mp4"></video>
+      </section>
+
+      <section id="home" class="screen home-screen hidden" aria-label="Menú principal">
+        <div class="section-heading"><h1>Compostaje fílmico<br>y formas de encuentro</h1></div>
+        <div class="choice-grid">
+          <button class="choice-card" id="openGallery"><span class="choice-art art-reel">▶</span><span class="choice-title">VER VIDEOS</span></button>
+          <button class="choice-card" id="openCapture"><span class="choice-art art-lens">🍄</span><span class="choice-title">GRABAR VIDEO / TOMAR FOTO</span></button>
+        </div>
+      </section>
+
+      <section id="gallery" class="screen gallery-screen hidden" aria-label="Videos">
+        <div class="screen-top"><button class="icon-button" data-home aria-label="Volver">←</button><div><h1>VIDEOS</h1></div><span class="counter">01 — 06</span></div>
+        <div class="gallery-grid" id="galleryGrid"></div>
+      </section>
+
+      <section id="capture" class="screen capture-screen hidden" aria-label="Microscopio">
+        <div class="capture-top"><button class="icon-button" data-home aria-label="Volver">←</button><div><h1>MICROSCOPIO</h1></div></div>
+        <div class="camera-frame"><video id="camera" autoplay muted playsinline></video><canvas id="photoCanvas" hidden></canvas><div class="camera-placeholder" id="cameraPlaceholder"><div class="placeholder-lens">🍄</div><p>CONECTANDO MICROSCOPIO</p><small>Permite el acceso a la cámara</small></div><div class="record-indicator hidden" id="recordIndicator"><i></i> GRABANDO <b id="timer">00:00</b></div></div>
+        <div class="capture-controls"><span class="limit-note">LÍMITE: 2 MINUTOS</span><div class="control-buttons"><button id="recordButton" class="capture-button record-button"><span class="record-shape"></span><span id="recordLabel">VIDEO</span></button><button id="photoButton" class="capture-button photo-button"><span class="camera-glyph">◎</span><span>FOTO</span></button></div><span class="save-note" id="saveStatus">GUARDAR ARCHIVOS</span></div>
+      </section>
+
+      <section id="player" class="screen player-screen hidden" aria-label="Reproductor"><button class="icon-button player-back" data-gallery>← VIDEOS</button><video id="filmPlayer" controls playsinline></video><div id="playerTitle" class="player-title"></div></section>
+      <div id="toast" class="toast" role="status" aria-live="polite"></div>
+      <div class="idle-note" id="idleNote">VOLVER AL INICIO EN <span id="idleCountdown">05:00</span></div>
+    </div>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
