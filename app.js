@@ -103,14 +103,12 @@ async function chooseSaveLocation() {
   if (window.showDirectoryPicker && window.isSecureContext) {
     try {
       outputDirectory = await window.showDirectoryPicker({ mode: 'readwrite' });
-      $('saveStatus').textContent = 'CARPETA ELEGIDA';
       showToast('Los archivos se guardarán en la carpeta seleccionada');
       return true;
     } catch (error) {
       if (error.name === 'AbortError') return false;
     }
   }
-  $('saveStatus').textContent = 'SE DESCARGARÁN AQUÍ';
   return true;
 }
 async function saveBlob(blob, name) {
