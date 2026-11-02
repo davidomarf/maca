@@ -3,6 +3,19 @@ const screens = ['attract', 'home', 'gallery', 'capture', 'player'];
 const screenBackgrounds = {
   attract: '001.jpg', home: '002.jpg', gallery: '008.jpg', capture: '010.jpg', player: '009.jpg',
 };
+const AMBIENT_START_KEY = 'maca.mainVideoStartedAt.v1';
+function loadAmbientStartTime() {
+  try {
+    const saved = Number(localStorage.getItem(AMBIENT_START_KEY));
+    if (Number.isFinite(saved) && saved > 0) return saved;
+    const initial = Date.now();
+    localStorage.setItem(AMBIENT_START_KEY, String(initial));
+    return initial;
+  } catch (error) {
+    return Date.now();
+  }
+}
+let ambientStartedAt = loadAmbientStartTime();
 const clips = [
   ['01', 'VIDEO 01', 'video-01.mp4', '✿', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'],
   ['02', 'VIDEO 02', 'video-02.mp4', '◉', 'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'],
@@ -172,6 +185,20 @@ function playClip(title, filename) {
   $('filmPlayer').onerror = () => showToast('No se pudo reproducir el video');
 }
 
+function syncAmbientVideo(force = false) {
+  const video = document.querySelector('.main-loop');
+  if (!video || !Number.isFinite(video.duration) || video.duration <= 0) return;
+  const targetTime = ((Date.now() - ambientStartedAt) / 1000 % video.duration + video.duration) % video.duration;
+  if (!force && Math.abs(video.currentTime - targetTime) < 1.5) return;
+  try { video.currentTime = targetTime; } catch (error) { /* Metadata may not be seekable yet. */ }
+}
+
+function resetAmbientVideoStart() {
+  ambientStartedAt = Date.now();
+  try { localStorage.setItem(AMBIENT_START_KEY, String(ambientStartedAt)); } catch (error) { /* Keep the current tab in sync if storage is unavailable. */ }
+  syncAmbientVideo(true);
+}
+
 function revealPlayerClose() {
   $('player').classList.add('close-visible');
   clearTimeout(playerCloseTimeout);
@@ -179,6 +206,9 @@ function revealPlayerClose() {
 }
 
 $('wallpaper').style.backgroundImage = `url('assets/backgrounds/web/${screenBackgrounds.attract}')`;
+const mainLoop = document.querySelector('.main-loop');
+mainLoop?.addEventListener('loadedmetadata', () => syncAmbientVideo(true), { once: true });
+if (mainLoop?.readyState >= 1) syncAmbientVideo(true);
 $('attract').addEventListener('pointermove', noteActivity, { passive: true });
 $('attract').addEventListener('pointerdown', noteActivity, { passive: true });
 $('attract').addEventListener('click', noteActivity, { passive: true });
@@ -189,9 +219,15 @@ document.querySelectorAll('[data-gallery]').forEach((button) => button.addEventL
 $('closePlayer').addEventListener('click', () => showScreen('gallery'));
 $('player').addEventListener('pointermove', revealPlayerClose, { passive: true });
 document.addEventListener('keydown', (event) => {
+  if (event.altKey && event.shiftKey && event.code === 'KeyM' && !event.ctrlKey && !event.metaKey && !event.repeat) {
+    event.preventDefault();
+    resetAmbientVideoStart();
+  }
   if (event.key === 'Escape' && active === 'player') showScreen('gallery');
 });
 $('recordButton').addEventListener('click', () => recorder?.state === 'recording' ? stopRecording() : beginRecording());
 $('photoButton').addEventListener('click', takePhoto);
 ['pointermove', 'pointerdown', 'click', 'keydown', 'touchstart'].forEach((event) => document.addEventListener(event, noteActivity, { passive: true }));
 document.addEventListener('visibilitychange', () => { if (document.hidden && recorder?.state === 'recording') stopRecording(); });
+document.addEventListener('visibilitychange', () => { if (!document.hidden) syncAmbientVideo(true); });
+window.addEventListener('pageshow', () => syncAmbientVideo(true));
