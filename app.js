@@ -25,7 +25,7 @@ const clips = [
   ['06', 'VIDEO 06', 'video-06.mp4', '❂', 'Curabitur blandit tempus porttitor. Nullam quis risus eget urna mollis.'],
 ];
 const galleryGrid = $('galleryGrid');
-let active = 'attract', idleTimeout, countdownInterval, playerCloseTimeout, lastActivity = Date.now();
+let active = 'attract', idleTimeout, countdownInterval, playerCloseTimeout, attractTransitionTimeout, attractFadeTimeout, lastActivity = Date.now();
 let stream = null, recorder = null, chunks = [], recordingStarted = 0, recordTicker;
 let outputDirectory = null, toastTimeout, cameraLoadingInterval, cameraRequestId = 0;
 
@@ -40,6 +40,10 @@ clips.forEach(([number, title, filename, symbol, description], index) => {
 
 function showScreen(name) {
   clearTimeout(playerCloseTimeout);
+  clearTimeout(attractTransitionTimeout);
+  clearTimeout(attractFadeTimeout);
+  $('attract').classList.remove('leaving');
+  $('home').classList.remove('home-transition-in', 'home-transition-visible');
   screens.forEach((id) => $(id).classList.toggle('hidden', id !== name));
   $('player').classList.remove('close-visible');
   active = name;
@@ -52,6 +56,28 @@ function showScreen(name) {
   armIdleTimer();
 }
 function enter() { showScreen('home'); }
+function scheduleAttractTransition() {
+  if (active !== 'attract' || attractTransitionTimeout) return;
+  attractTransitionTimeout = setTimeout(() => {
+    attractTransitionTimeout = null;
+    if (active !== 'attract') return;
+    const attract = $('attract');
+    const home = $('home');
+    active = 'home';
+    $('wallpaper').style.backgroundImage = `url('assets/backgrounds/web/${screenBackgrounds.home}')`;
+    home.classList.remove('hidden');
+    home.classList.add('home-transition-in');
+    attract.classList.add('leaving');
+    requestAnimationFrame(() => home.classList.add('home-transition-visible'));
+    armIdleTimer();
+    attractFadeTimeout = setTimeout(() => {
+      attract.classList.add('hidden');
+      attract.classList.remove('leaving');
+      home.classList.remove('home-transition-in', 'home-transition-visible');
+      attractFadeTimeout = null;
+    }, 450);
+  }, 500);
+}
 function showToast(message) {
   const toast = $('toast'); toast.textContent = message; toast.classList.add('show');
   clearTimeout(toastTimeout); toastTimeout = setTimeout(() => toast.classList.remove('show'), 3400);
@@ -70,8 +96,11 @@ function armIdleTimer() {
     $('idleCountdown').textContent = `${String(Math.floor(left / 60)).padStart(2, '0')}:${String(left % 60).padStart(2, '0')}`;
   }, 1000);
 }
-function noteActivity() {
-  if (active === 'attract') { enter(); return; }
+function noteActivity(event) {
+  if (active === 'attract') {
+    if (event?.type === 'pointermove') { scheduleAttractTransition(); return; }
+    enter(); return;
+  }
   armIdleTimer();
 }
 async function startCamera() {
@@ -244,7 +273,6 @@ $('wallpaper').style.backgroundImage = `url('assets/backgrounds/web/${screenBack
 const mainLoop = document.querySelector('.main-loop');
 mainLoop?.addEventListener('loadedmetadata', () => syncAmbientVideo(true), { once: true });
 if (mainLoop?.readyState >= 1) syncAmbientVideo(true);
-$('attract').addEventListener('pointermove', noteActivity, { passive: true });
 $('attract').addEventListener('pointerdown', noteActivity, { passive: true });
 $('attract').addEventListener('click', noteActivity, { passive: true });
 $('openGallery').addEventListener('click', () => showScreen('gallery'));
