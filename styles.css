@@ -46,3 +46,6 @@ h1{color:#292216;-webkit-text-fill-color:#292216;-webkit-text-stroke:1.5px #e1dc
 #player .player-close{position:absolute;top:14px;right:14px;z-index:1;width:48px;min-width:48px;height:48px;padding:0;font:32px/1 Arial,sans-serif;opacity:0;pointer-events:none;transition:opacity .15s ease}
 #player.close-visible .player-close,#player:focus-within .player-close{opacity:1;pointer-events:auto}
 @media(max-width:650px){#player.player-screen{inset:5px;padding:10px;border-width:6px}#player .player-close{top:8px;right:8px}}
+.placeholder-spinner{display:none;width:48px;height:48px;object-fit:contain;margin-bottom:12px;filter:drop-shadow(2px 2px 1px #101914)}
+.camera-placeholder.loading .placeholder-spinner{display:block;animation:microscope-loading-spin 1.15s linear infinite}
+@keyframes microscope-loading-spin{to{transform:rotate(360deg)}}

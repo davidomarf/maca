@@ -27,7 +27,7 @@ const clips = [
 const galleryGrid = $('galleryGrid');
 let active = 'attract', idleTimeout, countdownInterval, playerCloseTimeout, lastActivity = Date.now();
 let stream = null, recorder = null, chunks = [], recordingStarted = 0, recordTicker;
-let outputDirectory = null, toastTimeout;
+let outputDirectory = null, toastTimeout, cameraLoadingInterval, cameraRequestId = 0;
 
 clips.forEach(([number, title, filename, symbol, description], index) => {
   const card = document.createElement('button');
@@ -76,35 +76,70 @@ function noteActivity() {
 }
 async function startCamera() {
   if (stream) return;
+  const requestId = ++cameraRequestId;
+  const loadingStartedAt = Date.now();
+  const loadingMessages = ['PREPARANDO CÁMARA', 'BUSCANDO MICROSCOPIO', 'AJUSTANDO SEÑAL', 'ESPERANDO IMAGEN'];
+  let messageIndex = 0;
+  const placeholder = $('cameraPlaceholder');
+  const status = placeholder.querySelector('p');
+  const detail = placeholder.querySelector('small');
+  placeholder.classList.add('loading');
+  status.textContent = loadingMessages[messageIndex];
+  detail.textContent = 'Conectando microscopio';
+  clearInterval(cameraLoadingInterval);
+  cameraLoadingInterval = setInterval(() => {
+    messageIndex = (messageIndex + 1) % loadingMessages.length;
+    status.textContent = loadingMessages[messageIndex];
+  }, 800);
   if (!navigator.mediaDevices?.getUserMedia) {
-    $('cameraPlaceholder').classList.remove('hidden');
-    $('cameraPlaceholder').querySelector('p').textContent = 'SE NECESITA HTTPS';
-    $('cameraPlaceholder').querySelector('small').textContent = 'Abre el sitio con HTTPS o localhost para usar la cámara';
+    clearInterval(cameraLoadingInterval);
+    placeholder.classList.remove('loading', 'hidden');
+    status.textContent = 'SE NECESITA HTTPS';
+    detail.textContent = 'Abre el sitio con HTTPS o localhost para usar la cámara';
     return;
   }
   try {
-    stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false });
+    const cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false });
+    if (requestId !== cameraRequestId || active !== 'capture') {
+      cameraStream.getTracks().forEach((track) => track.stop());
+      return;
+    }
     const camera = $('camera');
-    camera.onloadedmetadata = () => {
-      if (camera.videoWidth && camera.videoHeight) {
-        const frame = document.querySelector('.camera-frame');
-        frame.style.setProperty('--camera-ratio', camera.videoWidth / camera.videoHeight);
-        frame.style.setProperty('--camera-aspect', `${camera.videoWidth} / ${camera.videoHeight}`);
-      }
-    };
-    camera.srcObject = stream; $('cameraPlaceholder').classList.add('hidden');
+    const metadataReady = new Promise((resolve) => camera.addEventListener('loadedmetadata', resolve, { once: true }));
+    camera.srcObject = cameraStream;
+    await Promise.race([metadataReady, new Promise((resolve) => setTimeout(resolve, 2500))]);
+    await new Promise((resolve) => setTimeout(resolve, Math.max(0, 2200 - (Date.now() - loadingStartedAt))));
+    if (requestId !== cameraRequestId || active !== 'capture') {
+      cameraStream.getTracks().forEach((track) => track.stop());
+      camera.srcObject = null;
+      return;
+    }
+    if (camera.videoWidth && camera.videoHeight) {
+      const frame = document.querySelector('.camera-frame');
+      frame.style.setProperty('--camera-ratio', camera.videoWidth / camera.videoHeight);
+      frame.style.setProperty('--camera-aspect', `${camera.videoWidth} / ${camera.videoHeight}`);
+    }
+    stream = cameraStream;
+    clearInterval(cameraLoadingInterval);
+    placeholder.classList.remove('loading');
+    placeholder.classList.add('hidden');
   } catch (error) {
-    $('cameraPlaceholder').classList.remove('hidden');
-    $('cameraPlaceholder').querySelector('p').textContent = error.name === 'NotAllowedError' ? 'PERMITE EL ACCESO A LA CÁMARA' : 'NO SE ENCONTRÓ EL MICROSCOPIO';
-    $('cameraPlaceholder').querySelector('small').textContent = 'Conecta el microscopio USB y permite el acceso a la cámara';
+    if (requestId !== cameraRequestId) return;
+    clearInterval(cameraLoadingInterval);
+    placeholder.classList.remove('loading', 'hidden');
+    status.textContent = error.name === 'NotAllowedError' ? 'PERMITE EL ACCESO A LA CÁMARA' : 'NO SE ENCONTRÓ EL MICROSCOPIO';
+    detail.textContent = 'Conecta el microscopio USB y permite el acceso a la cámara';
   }
 }
 function stopCamera() {
+  cameraRequestId += 1;
+  clearInterval(cameraLoadingInterval);
   if (stream) stream.getTracks().forEach((track) => track.stop());
   stream = null; $('camera').srcObject = null;
+  $('cameraPlaceholder').classList.add('loading');
   $('cameraPlaceholder').classList.remove('hidden');
-  $('cameraPlaceholder').querySelector('p').textContent = 'CONECTANDO MICROSCOPIO';
-  $('cameraPlaceholder').querySelector('small').textContent = 'Permite el acceso a la cámara';
+  $('cameraPlaceholder').querySelector('p').textContent = 'PREPARANDO CÁMARA';
+  $('cameraPlaceholder').querySelector('small').textContent = 'Conectando microscopio';
 }
 function getRecordingType() {
   if (!window.MediaRecorder) return '';
