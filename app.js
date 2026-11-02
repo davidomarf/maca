@@ -12,7 +12,7 @@ const clips = [
   ['06', 'VIDEO 06', 'video-06.mp4', '❂', 'Curabitur blandit tempus porttitor. Nullam quis risus eget urna mollis.'],
 ];
 const galleryGrid = $('galleryGrid');
-let active = 'attract', idleTimeout, countdownInterval, lastActivity = Date.now();
+let active = 'attract', idleTimeout, countdownInterval, playerCloseTimeout, lastActivity = Date.now();
 let stream = null, recorder = null, chunks = [], recordingStarted = 0, recordTicker;
 let outputDirectory = null, toastTimeout;
 
@@ -26,7 +26,9 @@ clips.forEach(([number, title, filename, symbol, description], index) => {
 });
 
 function showScreen(name) {
+  clearTimeout(playerCloseTimeout);
   screens.forEach((id) => $(id).classList.toggle('hidden', id !== name));
+  $('player').classList.remove('close-visible');
   active = name;
   $('wallpaper').style.backgroundImage = `url('assets/backgrounds/web/${screenBackgrounds[name]}')`;
   if (name !== 'capture' && recorder?.state === 'recording') stopRecording();
@@ -170,6 +172,12 @@ function playClip(title, filename) {
   $('filmPlayer').onerror = () => showToast('No se pudo reproducir el video');
 }
 
+function revealPlayerClose() {
+  $('player').classList.add('close-visible');
+  clearTimeout(playerCloseTimeout);
+  playerCloseTimeout = setTimeout(() => $('player').classList.remove('close-visible'), 2200);
+}
+
 $('wallpaper').style.backgroundImage = `url('assets/backgrounds/web/${screenBackgrounds.attract}')`;
 $('attract').addEventListener('pointermove', noteActivity, { passive: true });
 $('attract').addEventListener('pointerdown', noteActivity, { passive: true });
@@ -178,6 +186,11 @@ $('openGallery').addEventListener('click', () => showScreen('gallery'));
 $('openCapture').addEventListener('click', () => showScreen('capture'));
 document.querySelectorAll('[data-home]').forEach((button) => button.addEventListener('click', () => showScreen('home')));
 document.querySelectorAll('[data-gallery]').forEach((button) => button.addEventListener('click', () => showScreen('gallery')));
+$('closePlayer').addEventListener('click', () => showScreen('gallery'));
+$('player').addEventListener('pointermove', revealPlayerClose, { passive: true });
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape' && active === 'player') showScreen('gallery');
+});
 $('recordButton').addEventListener('click', () => recorder?.state === 'recording' ? stopRecording() : beginRecording());
 $('photoButton').addEventListener('click', takePhoto);
 ['pointermove', 'pointerdown', 'click', 'keydown', 'touchstart'].forEach((event) => document.addEventListener(event, noteActivity, { passive: true }));

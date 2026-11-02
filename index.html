@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#aaa18a">
   <title>Compostaje fílmico y formas de encuentro</title>
-  <link rel="stylesheet" href="styles.css?v=5">
+  <link rel="stylesheet" href="styles.css?v=6">
 </head>
 <body>
   <main id="app" class="app">
@@ -38,7 +38,7 @@
         <div class="capture-controls"><div class="control-buttons"><button id="recordButton" class="capture-button record-button"><span class="record-shape"></span><span id="recordLabel">VIDEO</span></button><button id="photoButton" class="capture-button photo-button"><span class="camera-glyph">◎</span><span>FOTO</span></button></div></div>
       </section>
 
-      <section id="player" class="screen player-screen hidden" aria-label="Reproductor"><button class="icon-button player-back" data-gallery>← VIDEOS</button><video id="filmPlayer" controls playsinline></video><div id="playerTitle" class="player-title"></div></section>
+      <section id="player" class="screen player-screen hidden" aria-label="Reproductor"><video id="filmPlayer" controls playsinline></video><div id="playerTitle" class="player-title"></div><button class="icon-button player-close" id="closePlayer" aria-label="Cerrar video">×</button></section>
       <div id="toast" class="toast" role="status" aria-live="polite"></div>
       <div class="idle-note" id="idleNote">VOLVER AL INICIO EN <span id="idleCountdown">05:00</span></div>
     </div>
