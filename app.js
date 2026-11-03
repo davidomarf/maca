@@ -189,7 +189,7 @@ async function saveBlob(blob, name) {
     try {
       const handle = await outputDirectory.getFileHandle(name, { create: true });
       const writable = await handle.createWritable(); await writable.write(blob); await writable.close();
-      showToast(`Guardado en la carpeta: ${name}`); return;
+      showToast('¡Guardado!'); return;
     } catch (error) {
       showToast('Se descargará el archivo en este dispositivo.');
     }
@@ -197,7 +197,7 @@ async function saveBlob(blob, name) {
   const url = URL.createObjectURL(blob), link = document.createElement('a');
   link.href = url; link.download = name; link.click();
   setTimeout(() => URL.revokeObjectURL(url), 30000);
-  showToast(`Descargado: ${name}`);
+  showToast('¡Guardado!');
 }
 async function beginRecording() {
   if (!stream) { showToast('Conecta el microscopio y permite el acceso a la cámara'); return; }
