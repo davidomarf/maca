@@ -27,9 +27,32 @@ let outputDirectory = null, toastTimeout, cameraLoadingInterval, cameraRequestId
 
 clips.forEach(([filename, title, description, symbol], index) => {
   const card = document.createElement('button');
+  card.type = 'button';
   card.className = 'film-card';
-  card.innerHTML = `<span class="film-art" style="--art:${['#d0a958','#a5aa70','#aa795d','#a89c6a','#ca8060','#7da09a'][index]}"><span class="film-symbol">${symbol}</span></span><span class="film-meta"><img class="small-play-icon" src="assets/ui/play.png" alt=""></span><span class="film-name">${title}</span><span class="film-description">${description}</span>`;
-  card.querySelector('.film-art').style.backgroundImage = `linear-gradient(#1114,#1118),url('assets/backgrounds/web/${String(index + 2).padStart(3, '0')}.jpg')`;
+  const art = document.createElement('span');
+  art.className = 'film-art';
+  art.style.setProperty('--art', ['#d0a958', '#a5aa70', '#aa795d', '#a89c6a', '#ca8060', '#7da09a'][index]);
+  art.style.backgroundImage = `linear-gradient(#1114,#1118),url('assets/backgrounds/web/${String(index + 2).padStart(3, '0')}.jpg')`;
+  const symbolElement = document.createElement('span');
+  symbolElement.className = 'film-symbol';
+  symbolElement.textContent = symbol;
+  art.append(symbolElement);
+
+  const meta = document.createElement('span');
+  meta.className = 'film-meta';
+  const playIcon = document.createElement('img');
+  playIcon.className = 'small-play-icon';
+  playIcon.src = 'assets/ui/play.png';
+  playIcon.alt = '';
+  meta.append(playIcon);
+
+  const name = document.createElement('span');
+  name.className = 'film-name';
+  name.textContent = title;
+  const summary = document.createElement('span');
+  summary.className = 'film-description';
+  summary.textContent = description;
+  card.append(art, meta, name, summary);
   card.addEventListener('click', () => playClip(filename));
   galleryGrid.append(card);
 });

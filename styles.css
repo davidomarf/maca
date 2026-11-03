@@ -75,3 +75,4 @@ button:active{cursor:url('assets/cursor-48.png') 8 8,pointer}
 .choice-card .ui-icon{display:block;width:clamp(110px,15vw,180px);height:clamp(110px,15vw,180px);object-fit:contain;filter:drop-shadow(5px 7px 2px #141712bf)}
 @media(max-width:390px){.choice-card{flex-direction:column;justify-content:center}}
 .film-art{width:100%;height:auto;aspect-ratio:4 / 3}
+.visually-hidden{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}

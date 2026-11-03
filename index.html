@@ -1,45 +1,46 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es-MX">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#aaa18a">
   <title>Compostaje fílmico y formas de encuentro</title>
-  <link rel="stylesheet" href="styles.css?v=25">
+  <link rel="stylesheet" href="styles.css?v=26">
 </head>
 <body>
   <main id="app" class="app attract-mode">
+    <h1 class="visually-hidden">Compostaje fílmico y formas de encuentro</h1>
     <div id="wallpaper" class="wallpaper" aria-hidden="true"></div>
     <div class="ambient-fallback" aria-hidden="true"></div>
     <div class="grain" aria-hidden="true"></div>
     <div class="shell">
       <section id="attract" class="screen attract-screen" aria-label="Video principal">
-        <video class="main-loop" autoplay muted loop playsinline aria-label="Video principal en repetición"><source src="src/main.mp4" type="video/mp4"></video>
+        <video class="main-loop" autoplay muted loop playsinline><source src="src/main.mp4" type="video/mp4"></video>
       </section>
 
       <section id="home" class="screen home-screen hidden" aria-label="Menú principal">
         <div class="choice-grid">
-          <button class="choice-card" id="openGallery" aria-label="Ver videos"><img class="ui-icon" src="assets/ui/play.png" alt=""></button>
-          <button class="choice-card" id="openCapture" aria-label="Grabar"><img class="ui-icon" src="assets/ui/photo.png?v=2" alt=""></button>
+          <button type="button" class="choice-card" id="openGallery" aria-label="Ver videos"><img class="ui-icon" src="assets/ui/play.png" alt=""></button>
+          <button type="button" class="choice-card" id="openCapture" aria-label="Grabar"><img class="ui-icon" src="assets/ui/photo.png?v=2" alt=""></button>
         </div>
         <a class="button download-package" id="downloadPackage" href="downloads/compostaje-local.zip" download="compostaje-local.zip" hidden>DESCARGAR</a>
       </section>
 
       <section id="gallery" class="screen gallery-screen hidden" aria-label="Videos">
-        <div class="screen-top"><button class="icon-button" data-home aria-label="Volver">←</button></div>
+        <div class="screen-top"><button type="button" class="icon-button" data-home aria-label="Volver">←</button></div>
         <div class="gallery-grid" id="galleryGrid"></div>
       </section>
 
       <section id="capture" class="screen capture-screen hidden" aria-label="Microscopio">
-        <div class="capture-top"><button class="icon-button" data-home aria-label="Volver">←</button></div>
+        <div class="capture-top"><button type="button" class="icon-button" data-home aria-label="Volver">←</button></div>
         <div class="camera-frame"><video id="camera" autoplay muted playsinline></video><canvas id="photoCanvas" hidden></canvas><div class="camera-placeholder" id="cameraPlaceholder"><img class="placeholder-spinner" src="assets/B.png" alt=""><p>PREPARANDO CÁMARA</p><small>Conectando microscopio</small></div><div class="record-indicator hidden" id="recordIndicator"><i></i> GRABANDO <b id="timer">00:00</b></div></div>
-        <div class="capture-controls"><div class="control-buttons"><button id="recordButton" class="capture-button record-button"><img class="control-icon" id="recordIcon" src="assets/ui/record.png" alt=""><span id="recordLabel">VIDEO</span></button><button id="photoButton" class="capture-button photo-button"><img class="control-icon" src="assets/ui/photo.png?v=2" alt=""><span>FOTO</span></button></div></div>
+        <div class="capture-controls"><div class="control-buttons"><button type="button" id="recordButton" class="capture-button record-button"><img class="control-icon" id="recordIcon" src="assets/ui/record.png" alt=""><span id="recordLabel">VIDEO</span></button><button type="button" id="photoButton" class="capture-button photo-button"><img class="control-icon" src="assets/ui/photo.png?v=2" alt=""><span>FOTO</span></button></div></div>
       </section>
 
-      <section id="player" class="screen player-screen hidden" aria-label="Reproductor"><div class="player-frame" id="playerFrame"><video id="filmPlayer" controls playsinline></video></div><button class="icon-button player-close" id="closePlayer" aria-label="Cerrar video">×</button></section>
+      <section id="player" class="screen player-screen hidden" aria-label="Reproductor"><div class="player-frame" id="playerFrame"><video id="filmPlayer" controls playsinline></video></div><button type="button" class="icon-button player-close" id="closePlayer" aria-label="Cerrar video">×</button></section>
       <div id="toast" class="toast" role="status" aria-live="polite"></div>
     </div>
   </main>
-  <script src="app.js?v=12"></script>
+  <script src="app.js?v=13"></script>
 </body>
 </html>
