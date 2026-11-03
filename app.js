@@ -118,10 +118,14 @@ function armIdleTimer() {
 }
 function noteActivity(event) {
   if (active === 'attract') {
-    if (event?.type === 'pointermove') { scheduleAttractTransition(); return; }
-    enter(); return;
+    if (event?.type === 'pointermove') {
+      if (event.pointerType === 'mouse') scheduleAttractTransition();
+      return;
+    }
+    if (event?.type === 'pointerdown' || event?.type === 'click') enter();
+    return;
   }
-  armIdleTimer();
+  if (event?.type === 'pointermove' && event.pointerType === 'mouse') armIdleTimer();
 }
 async function startCamera() {
   if (stream) return;
@@ -320,10 +324,12 @@ document.addEventListener('keydown', (event) => {
     resetMainVideoStart();
   }
   if (event.key === 'Escape' && active === 'player') showScreen('gallery');
+  if (active === 'attract' && event.key !== 'Escape') enter();
 });
+document.addEventListener('touchstart', () => { if (active === 'attract') enter(); }, { passive: true });
 $('recordButton').addEventListener('click', () => recorder?.state === 'recording' ? stopRecording() : beginRecording());
 $('photoButton').addEventListener('click', takePhoto);
-['pointermove', 'pointerdown', 'click', 'keydown', 'touchstart'].forEach((event) => document.addEventListener(event, noteActivity, { passive: true }));
+document.addEventListener('pointermove', noteActivity, { passive: true });
 document.addEventListener('visibilitychange', () => { if (document.hidden && recorder?.state === 'recording') stopRecording(); });
 document.addEventListener('visibilitychange', () => { if (!document.hidden) syncMainVideo(true); });
 window.addEventListener('pageshow', () => syncMainVideo(true));
