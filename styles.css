@@ -64,3 +64,4 @@ button:active{cursor:url('assets/ui/cursor-click-small.png') 8 14,pointer}
 #attract{inset:0;border:0;box-shadow:none;background:transparent}
 .wallpaper{transition:opacity .9s ease}
 .film-meta{justify-content:flex-end}
+.download-package{display:inline-block;align-self:center;margin:0 0 8px;text-align:center;text-decoration:none}
