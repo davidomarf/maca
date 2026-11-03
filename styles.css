@@ -61,5 +61,6 @@ button:active{cursor:url('assets/ui/cursor-click-small.png') 8 14,pointer}
 .control-icon{width:40px;height:40px;object-fit:contain;vertical-align:middle;margin-right:5px}
 .small-play-icon{display:block;width:32px;height:32px;object-fit:contain}
 .app.attract-mode .wallpaper{opacity:1}
-#attract{background:transparent}
+#attract{inset:0;border:0;box-shadow:none;background:transparent}
 .wallpaper{transition:opacity .9s ease}
+.film-meta{justify-content:flex-end}

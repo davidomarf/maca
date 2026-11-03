@@ -17,20 +17,20 @@ function loadMainVideoStartTime() {
 }
 let mainVideoStartedAt = loadMainVideoStartTime();
 const clips = [
-  ['01', 'VIDEO 01', '1.mp4', '✿', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'],
-  ['02', 'VIDEO 02', '2.mp4', '◉', 'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'],
+  ['1.mp4', '✿', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'],
+  ['2.mp4', '◉', 'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'],
 ];
 const galleryGrid = $('galleryGrid');
 let active = 'attract', idleTimeout, playerCloseTimeout, attractTransitionTimeout, attractFadeTimeout;
 let stream = null, recorder = null, chunks = [], recordingStarted = 0, recordTicker;
 let outputDirectory = null, toastTimeout, cameraLoadingInterval, cameraRequestId = 0;
 
-clips.forEach(([number, title, filename, symbol, description], index) => {
+clips.forEach(([filename, symbol, description], index) => {
   const card = document.createElement('button');
   card.className = 'film-card';
-  card.innerHTML = `<span class="film-art" style="--art:${['#d0a958','#a5aa70','#aa795d','#a89c6a','#ca8060','#7da09a'][index]}"><span class="film-symbol">${symbol}</span></span><span class="film-meta"><span>VIDEO ${number}</span><span><img class="small-play-icon" src="assets/ui/play.png" alt=""></span></span><span class="film-name">${title}</span><span class="film-description">${description}</span>`;
+  card.innerHTML = `<span class="film-art" style="--art:${['#d0a958','#a5aa70','#aa795d','#a89c6a','#ca8060','#7da09a'][index]}"><span class="film-symbol">${symbol}</span></span><span class="film-meta"><img class="small-play-icon" src="assets/ui/play.png" alt=""></span><span class="film-description">${description}</span>`;
   card.querySelector('.film-art').style.backgroundImage = `linear-gradient(#1114,#1118),url('assets/backgrounds/web/${String(index + 2).padStart(3, '0')}.jpg')`;
-  card.addEventListener('click', () => playClip(title, filename));
+  card.addEventListener('click', () => playClip(filename));
   galleryGrid.append(card);
 });
 
@@ -233,9 +233,8 @@ async function takePhoto() {
   const context = canvas.getContext('2d'); context.drawImage(video, 0, 0);
   canvas.toBlob((blob) => { if (blob) saveBlob(blob, `microscope-photo-${timestamp()}.jpg`); }, 'image/jpeg', .94);
 }
-function playClip(title, filename) {
+function playClip(filename) {
   $('filmPlayer').src = `src/${filename}`;
-  $('playerTitle').textContent = title;
   showScreen('player');
   $('filmPlayer').play().catch(() => showToast('No se pudo reproducir el video'));
   $('filmPlayer').onerror = () => showToast('No se pudo reproducir el video');
