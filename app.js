@@ -17,18 +17,18 @@ function loadMainVideoStartTime() {
 }
 let mainVideoStartedAt = loadMainVideoStartTime();
 const clips = [
-  ['1.mp4', '✿', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'],
-  ['2.mp4', '◉', 'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'],
+  ['1.mp4', '✿'],
+  ['2.mp4', '◉'],
 ];
 const galleryGrid = $('galleryGrid');
 let active = 'attract', idleTimeout, playerCloseTimeout, attractTransitionTimeout, attractFadeTimeout;
 let stream = null, recorder = null, chunks = [], recordingStarted = 0, recordTicker;
 let outputDirectory = null, toastTimeout, cameraLoadingInterval, cameraRequestId = 0;
 
-clips.forEach(([filename, symbol, description], index) => {
+clips.forEach(([filename, symbol], index) => {
   const card = document.createElement('button');
   card.className = 'film-card';
-  card.innerHTML = `<span class="film-art" style="--art:${['#d0a958','#a5aa70','#aa795d','#a89c6a','#ca8060','#7da09a'][index]}"><span class="film-symbol">${symbol}</span></span><span class="film-meta"><img class="small-play-icon" src="assets/ui/play.png" alt=""></span><span class="film-description">${description}</span>`;
+  card.innerHTML = `<span class="film-art" style="--art:${['#d0a958','#a5aa70','#aa795d','#a89c6a','#ca8060','#7da09a'][index]}"><span class="film-symbol">${symbol}</span></span><span class="film-meta"><img class="small-play-icon" src="assets/ui/play.png" alt=""></span>`;
   card.querySelector('.film-art').style.backgroundImage = `linear-gradient(#1114,#1118),url('assets/backgrounds/web/${String(index + 2).padStart(3, '0')}.jpg')`;
   card.addEventListener('click', () => playClip(filename));
   galleryGrid.append(card);
@@ -235,9 +235,21 @@ async function takePhoto() {
 }
 function playClip(filename) {
   $('filmPlayer').src = `src/${filename}`;
+  resizePlayerFrame();
   showScreen('player');
   $('filmPlayer').play().catch(() => showToast('No se pudo reproducir el video'));
   $('filmPlayer').onerror = () => showToast('No se pudo reproducir el video');
+}
+
+function resizePlayerFrame() {
+  const video = $('filmPlayer');
+  const frame = $('playerFrame');
+  const ratio = video.videoWidth && video.videoHeight ? video.videoWidth / video.videoHeight : 16 / 9;
+  const maxWidth = Math.max(1, window.innerWidth - 40);
+  const maxHeight = Math.max(1, window.innerHeight - 40);
+  const width = Math.min(maxWidth, maxHeight * ratio);
+  frame.style.width = `${width}px`;
+  frame.style.height = `${width / ratio}px`;
 }
 
 function syncMainVideo(force = false) {
@@ -265,6 +277,8 @@ if (location.protocol === 'https:') $('downloadPackage').hidden = false;
 const mainVideo = document.querySelector('.main-loop');
 mainVideo?.addEventListener('loadedmetadata', () => syncMainVideo(true), { once: true });
 if (mainVideo?.readyState >= 1) syncMainVideo(true);
+$('filmPlayer').addEventListener('loadedmetadata', resizePlayerFrame);
+window.addEventListener('resize', resizePlayerFrame);
 $('attract').addEventListener('pointerdown', noteActivity, { passive: true });
 $('attract').addEventListener('click', noteActivity, { passive: true });
 $('openGallery').addEventListener('click', () => showScreen('gallery'));

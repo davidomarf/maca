@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#aaa18a">
   <title>Compostaje fílmico y formas de encuentro</title>
-  <link rel="stylesheet" href="styles.css?v=20">
+  <link rel="stylesheet" href="styles.css?v=22">
 </head>
 <body>
   <main id="app" class="app attract-mode">
@@ -26,7 +26,7 @@
       </section>
 
       <section id="gallery" class="screen gallery-screen hidden" aria-label="Videos">
-        <div class="screen-top"><button class="icon-button" data-home aria-label="Volver">←</button><div><h1>VIDEOS</h1></div></div>
+        <div class="screen-top"><button class="icon-button" data-home aria-label="Volver">←</button></div>
         <div class="gallery-grid" id="galleryGrid"></div>
       </section>
 
@@ -36,10 +36,10 @@
         <div class="capture-controls"><div class="control-buttons"><button id="recordButton" class="capture-button record-button"><img class="control-icon" id="recordIcon" src="assets/ui/record.png" alt=""><span id="recordLabel">VIDEO</span></button><button id="photoButton" class="capture-button photo-button"><img class="control-icon" src="assets/ui/photo.png" alt=""><span>FOTO</span></button></div></div>
       </section>
 
-      <section id="player" class="screen player-screen hidden" aria-label="Reproductor"><video id="filmPlayer" controls playsinline></video><button class="icon-button player-close" id="closePlayer" aria-label="Cerrar video">×</button></section>
+      <section id="player" class="screen player-screen hidden" aria-label="Reproductor"><div class="player-frame" id="playerFrame"><video id="filmPlayer" controls playsinline></video></div><button class="icon-button player-close" id="closePlayer" aria-label="Cerrar video">×</button></section>
       <div id="toast" class="toast" role="status" aria-live="polite"></div>
     </div>
   </main>
-  <script src="app.js?v=10"></script>
+  <script src="app.js?v=11"></script>
 </body>
 </html>
