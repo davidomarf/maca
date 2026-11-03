@@ -25,7 +25,7 @@ const clips = [
   ['06', 'VIDEO 06', 'video-06.mp4', '❂', 'Curabitur blandit tempus porttitor. Nullam quis risus eget urna mollis.'],
 ];
 const galleryGrid = $('galleryGrid');
-let active = 'attract', idleTimeout, countdownInterval, playerCloseTimeout, attractTransitionTimeout, attractFadeTimeout, lastActivity = Date.now();
+let active = 'attract', idleTimeout, playerCloseTimeout, attractTransitionTimeout, attractFadeTimeout;
 let stream = null, recorder = null, chunks = [], recordingStarted = 0, recordTicker;
 let outputDirectory = null, toastTimeout, cameraLoadingInterval, cameraRequestId = 0;
 
@@ -83,18 +83,12 @@ function showToast(message) {
   clearTimeout(toastTimeout); toastTimeout = setTimeout(() => toast.classList.remove('show'), 3400);
 }
 function armIdleTimer() {
-  clearTimeout(idleTimeout); clearInterval(countdownInterval);
-  $('idleNote').classList.toggle('visible', active !== 'attract');
+  clearTimeout(idleTimeout);
   if (active === 'attract') return;
-  lastActivity = Date.now();
   idleTimeout = setTimeout(() => {
     if (active === 'capture' && recorder?.state === 'recording') stopRecording();
     showScreen('attract');
   }, 5 * 60 * 1000);
-  countdownInterval = setInterval(() => {
-    const left = Math.max(0, 300 - Math.floor((Date.now() - lastActivity) / 1000));
-    $('idleCountdown').textContent = `${String(Math.floor(left / 60)).padStart(2, '0')}:${String(left % 60).padStart(2, '0')}`;
-  }, 1000);
 }
 function noteActivity(event) {
   if (active === 'attract') {
