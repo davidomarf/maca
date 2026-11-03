@@ -49,6 +49,6 @@ h1{color:#292216;-webkit-text-fill-color:#292216;-webkit-text-stroke:1.5px #e1dc
 .placeholder-spinner{display:none;width:48px;height:48px;object-fit:contain;margin-bottom:12px;filter:drop-shadow(2px 2px 1px #101914)}
 .camera-placeholder.loading .placeholder-spinner{display:block;animation:microscope-loading-spin 1.15s linear infinite}
 @keyframes microscope-loading-spin{to{transform:rotate(360deg)}}
-#attract.leaving{opacity:0;pointer-events:none;transition:opacity .45s ease;animation:none}
-#home.home-transition-in{opacity:0;pointer-events:none;transition:opacity .45s ease;animation:none}
+#attract.leaving{opacity:0;pointer-events:none;transition:opacity .9s ease;animation:none}
+#home.home-transition-in{opacity:0;pointer-events:none;transition:opacity .9s ease;animation:none}
 #home.home-transition-in.home-transition-visible{opacity:1;pointer-events:auto}

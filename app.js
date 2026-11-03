@@ -75,8 +75,8 @@ function scheduleAttractTransition() {
       attract.classList.remove('leaving');
       home.classList.remove('home-transition-in', 'home-transition-visible');
       attractFadeTimeout = null;
-    }, 450);
-  }, 500);
+    }, 900);
+  }, 1000);
 }
 function showToast(message) {
   const toast = $('toast'); toast.textContent = message; toast.classList.add('show');
@@ -137,7 +137,7 @@ async function startCamera() {
     const metadataReady = new Promise((resolve) => camera.addEventListener('loadedmetadata', resolve, { once: true }));
     camera.srcObject = cameraStream;
     await Promise.race([metadataReady, new Promise((resolve) => setTimeout(resolve, 2500))]);
-    await new Promise((resolve) => setTimeout(resolve, Math.max(0, 2200 - (Date.now() - loadingStartedAt))));
+    await new Promise((resolve) => setTimeout(resolve, Math.max(0, 4400 - (Date.now() - loadingStartedAt))));
     if (requestId !== cameraRequestId || active !== 'capture') {
       cameraStream.getTracks().forEach((track) => track.stop());
       camera.srcObject = null;
