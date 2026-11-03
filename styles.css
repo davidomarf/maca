@@ -71,3 +71,6 @@ button:active{cursor:url('assets/cursor-48.png') 8 8,pointer}
 #player .player-frame video{display:block;width:100%;height:100%;max-height:none;object-fit:contain;background:#111;border:0;box-shadow:none}
 @media(max-width:650px){#player.player-screen{padding:12px}#player .player-frame{max-width:calc(100vw - 24px);max-height:calc(100vh - 24px);border-width:6px}}
 .gallery-grid{grid-template-columns:repeat(2,minmax(0,1fr));width:100%}
+.choice-card{gap:0}
+.choice-card .ui-icon{display:block;width:clamp(110px,15vw,180px);height:clamp(110px,15vw,180px);object-fit:contain;filter:drop-shadow(5px 7px 2px #141712bf)}
+@media(max-width:390px){.choice-card{flex-direction:column;justify-content:center}}
