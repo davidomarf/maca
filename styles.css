@@ -52,9 +52,9 @@ h1{color:#292216;-webkit-text-fill-color:#292216;-webkit-text-stroke:1.5px #e1dc
 #attract.leaving{opacity:0;pointer-events:none;transition:opacity .9s ease;animation:none}
 #home.home-transition-in{opacity:0;pointer-events:none;transition:opacity .9s ease;animation:none}
 #home.home-transition-in.home-transition-visible{opacity:1;pointer-events:auto}
-:root{cursor:url('assets/ui/cursor-click-small.png') 8 14,auto}
-button{cursor:url('assets/ui/puntita-cursor.png') 9 15,pointer}
-button:active{cursor:url('assets/ui/cursor-click-small.png') 8 14,pointer}
+:root{cursor:url('assets/cursor-48.png') 8 8,auto}
+button{cursor:url('assets/cursor-48.png') 8 8,pointer}
+button:active{cursor:url('assets/cursor-48.png') 8 8,pointer}
 .choice-art .ui-icon{display:block;width:78%;height:82%;object-fit:contain}
 .art-lens{display:flex;align-items:center;justify-content:center;gap:0}
 .art-lens .ui-icon{width:78%;height:78%;object-fit:contain}
