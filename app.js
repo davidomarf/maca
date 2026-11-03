@@ -234,7 +234,7 @@ async function takePhoto() {
   canvas.toBlob((blob) => { if (blob) saveBlob(blob, `microscope-photo-${timestamp()}.jpg`); }, 'image/jpeg', .94);
 }
 function playClip(title, filename) {
-  $('filmPlayer').src = `assets/videos/${filename}`;
+  $('filmPlayer').src = `src/${filename}`;
   $('playerTitle').textContent = title;
   showScreen('player');
   $('filmPlayer').play().catch(() => showToast('No se pudo reproducir el video'));
