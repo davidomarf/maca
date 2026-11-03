@@ -32,7 +32,7 @@ let outputDirectory = null, toastTimeout, cameraLoadingInterval, cameraRequestId
 clips.forEach(([number, title, filename, symbol, description], index) => {
   const card = document.createElement('button');
   card.className = 'film-card';
-  card.innerHTML = `<span class="film-art" style="--art:${['#d0a958','#a5aa70','#aa795d','#a89c6a','#ca8060','#7da09a'][index]}"><span class="film-symbol">${symbol}</span></span><span class="film-meta"><span>VIDEO ${number}</span><span>▶</span></span><span class="film-name">${title}</span><span class="film-description">${description}</span>`;
+  card.innerHTML = `<span class="film-art" style="--art:${['#d0a958','#a5aa70','#aa795d','#a89c6a','#ca8060','#7da09a'][index]}"><span class="film-symbol">${symbol}</span></span><span class="film-meta"><span>VIDEO ${number}</span><span><img class="small-play-icon" src="assets/ui/play.png" alt=""></span></span><span class="film-name">${title}</span><span class="film-description">${description}</span>`;
   card.querySelector('.film-art').style.backgroundImage = `linear-gradient(#1114,#1118),url('assets/backgrounds/web/${String(index + 2).padStart(3, '0')}.jpg')`;
   card.addEventListener('click', () => playClip(title, filename));
   galleryGrid.append(card);
@@ -219,7 +219,7 @@ async function beginRecording() {
       saveBlob(blob, `microscope-video-${timestamp()}.${extensionFor(blob.type)}`);
       chunks = [];
     };
-    recorder.start(1000); recordingStarted = Date.now(); $('recordButton').classList.add('recording');
+    recorder.start(1000); recordingStarted = Date.now(); $('recordButton').classList.add('recording'); $('recordIcon').src = 'assets/ui/stop.png';
     $('recordLabel').textContent = 'DETENER'; $('recordIndicator').classList.remove('hidden');
     recordTicker = setInterval(updateRecordTimer, 250); updateRecordTimer();
     setTimeout(() => { if (recorder?.state === 'recording') { stopRecording(); showToast('Se alcanzó el límite de dos minutos'); } }, 120000);
@@ -231,7 +231,7 @@ function updateRecordTimer() {
 }
 function stopRecording() {
   if (recorder?.state !== 'recording') return;
-  recorder.stop(); clearInterval(recordTicker); $('recordButton').classList.remove('recording');
+  recorder.stop(); clearInterval(recordTicker); $('recordButton').classList.remove('recording'); $('recordIcon').src = 'assets/ui/record.png';
   $('recordLabel').textContent = 'VIDEO'; $('recordIndicator').classList.add('hidden');
 }
 async function takePhoto() {
