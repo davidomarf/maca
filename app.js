@@ -17,18 +17,18 @@ function loadMainVideoStartTime() {
 }
 let mainVideoStartedAt = loadMainVideoStartTime();
 const clips = [
-  ['1.mp4', '✿'],
-  ['2.mp4', '◉'],
+  ['1.mp4', 'Muestra 1', 'Registro microscópico de la primera muestra.', '✿'],
+  ['2.mp4', 'Muestra 2', 'Registro microscópico de la segunda muestra.', '◉'],
 ];
 const galleryGrid = $('galleryGrid');
 let active = 'attract', idleTimeout, playerCloseTimeout, attractTransitionTimeout, attractFadeTimeout;
 let stream = null, recorder = null, chunks = [], recordingStarted = 0, recordTicker;
 let outputDirectory = null, toastTimeout, cameraLoadingInterval, cameraRequestId = 0;
 
-clips.forEach(([filename, symbol], index) => {
+clips.forEach(([filename, title, description, symbol], index) => {
   const card = document.createElement('button');
   card.className = 'film-card';
-  card.innerHTML = `<span class="film-art" style="--art:${['#d0a958','#a5aa70','#aa795d','#a89c6a','#ca8060','#7da09a'][index]}"><span class="film-symbol">${symbol}</span></span><span class="film-meta"><img class="small-play-icon" src="assets/ui/play.png" alt=""></span>`;
+  card.innerHTML = `<span class="film-art" style="--art:${['#d0a958','#a5aa70','#aa795d','#a89c6a','#ca8060','#7da09a'][index]}"><span class="film-symbol">${symbol}</span></span><span class="film-meta"><img class="small-play-icon" src="assets/ui/play.png" alt=""></span><span class="film-name">${title}</span><span class="film-description">${description}</span>`;
   card.querySelector('.film-art').style.backgroundImage = `linear-gradient(#1114,#1118),url('assets/backgrounds/web/${String(index + 2).padStart(3, '0')}.jpg')`;
   card.addEventListener('click', () => playClip(filename));
   galleryGrid.append(card);
