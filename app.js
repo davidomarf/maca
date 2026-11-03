@@ -63,6 +63,7 @@ function showScreen(name) {
   clearTimeout(attractFadeTimeout);
   $('attract').classList.remove('leaving');
   $('home').classList.remove('home-transition-in', 'home-transition-visible');
+  $('capture').classList.remove('capture-transition-in', 'capture-transition-visible');
   screens.forEach((id) => $(id).classList.toggle('hidden', id !== name));
   $('player').classList.remove('close-visible');
   active = name;
@@ -75,29 +76,33 @@ function showScreen(name) {
   else { $('filmPlayer').pause(); $('filmPlayer').removeAttribute('src'); $('filmPlayer').load(); }
   armIdleTimer();
 }
-function enter() { showScreen('home'); }
+function transitionToCapture() {
+  if (active !== 'attract') return;
+  clearTimeout(attractTransitionTimeout);
+  attractTransitionTimeout = null;
+  clearTimeout(attractFadeTimeout);
+  const attract = $('attract');
+  const capture = $('capture');
+  screens.forEach((id) => $(id).classList.toggle('hidden', id !== 'capture' && id !== 'attract'));
+  active = 'capture';
+  $('app').classList.remove('attract-mode');
+  $('wallpaper').style.backgroundImage = `url('assets/backgrounds/web/${screenBackgrounds.capture}')`;
+  capture.classList.add('capture-transition-in');
+  attract.classList.add('leaving');
+  requestAnimationFrame(() => capture.classList.add('capture-transition-visible'));
+  armIdleTimer();
+  attractFadeTimeout = setTimeout(() => {
+    attract.classList.add('hidden');
+    attract.classList.remove('leaving');
+    capture.classList.remove('capture-transition-in', 'capture-transition-visible');
+    attractFadeTimeout = null;
+    startCamera();
+  }, 900);
+}
+function enter() { transitionToCapture(); }
 function scheduleAttractTransition() {
   if (active !== 'attract' || attractTransitionTimeout) return;
-  attractTransitionTimeout = setTimeout(() => {
-    attractTransitionTimeout = null;
-    if (active !== 'attract') return;
-    const attract = $('attract');
-    const home = $('home');
-    active = 'home';
-    $('app').classList.remove('attract-mode');
-    $('wallpaper').style.backgroundImage = `url('assets/backgrounds/web/${screenBackgrounds.home}')`;
-    home.classList.remove('hidden');
-    home.classList.add('home-transition-in');
-    attract.classList.add('leaving');
-    requestAnimationFrame(() => home.classList.add('home-transition-visible'));
-    armIdleTimer();
-    attractFadeTimeout = setTimeout(() => {
-      attract.classList.add('hidden');
-      attract.classList.remove('leaving');
-      home.classList.remove('home-transition-in', 'home-transition-visible');
-      attractFadeTimeout = null;
-    }, 900);
-  }, 1000);
+  attractTransitionTimeout = setTimeout(transitionToCapture, 1000);
 }
 function showToast(message) {
   const toast = $('toast'); toast.textContent = message; toast.classList.add('show');
@@ -223,7 +228,6 @@ async function saveBlob(blob, name) {
 async function beginRecording() {
   if (!stream) { showToast('Conecta el microscopio y permite el acceso a la cámara'); return; }
   if (!window.MediaRecorder) { showToast('Este navegador no permite grabar video'); return; }
-  if (!await chooseSaveLocation()) return;
   const type = getRecordingType();
   try {
     recorder = new MediaRecorder(stream, type ? { mimeType: type } : undefined);
@@ -307,6 +311,7 @@ $('attract').addEventListener('click', noteActivity, { passive: true });
 $('openGallery')?.addEventListener('click', () => showScreen('gallery'));
 $('openCapture').addEventListener('click', () => showScreen('capture'));
 document.querySelectorAll('[data-home]').forEach((button) => button.addEventListener('click', () => showScreen('home')));
+document.querySelectorAll('[data-attract]').forEach((button) => button.addEventListener('click', () => showScreen('attract')));
 document.querySelectorAll('[data-gallery]').forEach((button) => button.addEventListener('click', () => showScreen('gallery')));
 $('closePlayer').addEventListener('click', () => showScreen('gallery'));
 $('player').addEventListener('pointermove', revealPlayerClose, { passive: true });
