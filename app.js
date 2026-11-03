@@ -304,7 +304,7 @@ $('filmPlayer').addEventListener('loadedmetadata', resizePlayerFrame);
 window.addEventListener('resize', resizePlayerFrame);
 $('attract').addEventListener('pointerdown', noteActivity, { passive: true });
 $('attract').addEventListener('click', noteActivity, { passive: true });
-$('openGallery').addEventListener('click', () => showScreen('gallery'));
+$('openGallery')?.addEventListener('click', () => showScreen('gallery'));
 $('openCapture').addEventListener('click', () => showScreen('capture'));
 document.querySelectorAll('[data-home]').forEach((button) => button.addEventListener('click', () => showScreen('home')));
 document.querySelectorAll('[data-gallery]').forEach((button) => button.addEventListener('click', () => showScreen('gallery')));
