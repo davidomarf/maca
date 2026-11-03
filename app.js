@@ -3,19 +3,19 @@ const screens = ['attract', 'home', 'gallery', 'capture', 'player'];
 const screenBackgrounds = {
   attract: '001.jpg', home: '002.jpg', gallery: '008.jpg', capture: '010.jpg', player: '009.jpg',
 };
-const AMBIENT_START_KEY = 'maca.mainVideoStartedAt.v1';
-function loadAmbientStartTime() {
+const MAIN_VIDEO_START_KEY = 'maca.mainVideoStartedAt.v1';
+function loadMainVideoStartTime() {
   try {
-    const saved = Number(localStorage.getItem(AMBIENT_START_KEY));
+    const saved = Number(localStorage.getItem(MAIN_VIDEO_START_KEY));
     if (Number.isFinite(saved) && saved > 0) return saved;
     const initial = Date.now();
-    localStorage.setItem(AMBIENT_START_KEY, String(initial));
+    localStorage.setItem(MAIN_VIDEO_START_KEY, String(initial));
     return initial;
   } catch (error) {
     return Date.now();
   }
 }
-let ambientStartedAt = loadAmbientStartTime();
+let mainVideoStartedAt = loadMainVideoStartTime();
 const clips = [
   ['01', 'VIDEO 01', '1.mp4', '✿', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'],
   ['02', 'VIDEO 02', '2.mp4', '◉', 'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'],
@@ -43,6 +43,7 @@ function showScreen(name) {
   screens.forEach((id) => $(id).classList.toggle('hidden', id !== name));
   $('player').classList.remove('close-visible');
   active = name;
+  $('app').classList.toggle('attract-mode', name === 'attract');
   $('wallpaper').style.backgroundImage = `url('assets/backgrounds/web/${screenBackgrounds[name]}')`;
   if (name !== 'capture' && recorder?.state === 'recording') stopRecording();
   if (name === 'capture') startCamera();
@@ -60,6 +61,7 @@ function scheduleAttractTransition() {
     const attract = $('attract');
     const home = $('home');
     active = 'home';
+    $('app').classList.remove('attract-mode');
     $('wallpaper').style.backgroundImage = `url('assets/backgrounds/web/${screenBackgrounds.home}')`;
     home.classList.remove('hidden');
     home.classList.add('home-transition-in');
@@ -239,19 +241,18 @@ function playClip(title, filename) {
   $('filmPlayer').onerror = () => showToast('No se pudo reproducir el video');
 }
 
-function syncAmbientVideo(force = false) {
-  document.querySelectorAll('.main-loop, #ambient').forEach((video) => {
-    if (!Number.isFinite(video.duration) || video.duration <= 0) return;
-    const targetTime = ((Date.now() - ambientStartedAt) / 1000 % video.duration + video.duration) % video.duration;
-    if (!force && Math.abs(video.currentTime - targetTime) < 1.5) return;
-    try { video.currentTime = targetTime; } catch (error) { /* Metadata may not be seekable yet. */ }
-  });
+function syncMainVideo(force = false) {
+  const video = document.querySelector('.main-loop');
+  if (!video || !Number.isFinite(video.duration) || video.duration <= 0) return;
+  const targetTime = ((Date.now() - mainVideoStartedAt) / 1000 % video.duration + video.duration) % video.duration;
+  if (!force && Math.abs(video.currentTime - targetTime) < 1.5) return;
+  try { video.currentTime = targetTime; } catch (error) { /* Metadata may not be seekable yet. */ }
 }
 
-function resetAmbientVideoStart() {
-  ambientStartedAt = Date.now();
-  try { localStorage.setItem(AMBIENT_START_KEY, String(ambientStartedAt)); } catch (error) { /* Keep the current tab in sync if storage is unavailable. */ }
-  syncAmbientVideo(true);
+function resetMainVideoStart() {
+  mainVideoStartedAt = Date.now();
+  try { localStorage.setItem(MAIN_VIDEO_START_KEY, String(mainVideoStartedAt)); } catch (error) { /* Keep the current tab in sync if storage is unavailable. */ }
+  syncMainVideo(true);
 }
 
 function revealPlayerClose() {
@@ -261,10 +262,9 @@ function revealPlayerClose() {
 }
 
 $('wallpaper').style.backgroundImage = `url('assets/backgrounds/web/${screenBackgrounds.attract}')`;
-document.querySelectorAll('.main-loop, #ambient').forEach((video) => {
-  video.addEventListener('loadedmetadata', () => syncAmbientVideo(true), { once: true });
-  if (video.readyState >= 1) syncAmbientVideo(true);
-});
+const mainVideo = document.querySelector('.main-loop');
+mainVideo?.addEventListener('loadedmetadata', () => syncMainVideo(true), { once: true });
+if (mainVideo?.readyState >= 1) syncMainVideo(true);
 $('attract').addEventListener('pointerdown', noteActivity, { passive: true });
 $('attract').addEventListener('click', noteActivity, { passive: true });
 $('openGallery').addEventListener('click', () => showScreen('gallery'));
@@ -276,7 +276,7 @@ $('player').addEventListener('pointermove', revealPlayerClose, { passive: true }
 document.addEventListener('keydown', (event) => {
   if (event.altKey && event.shiftKey && event.code === 'KeyM' && !event.ctrlKey && !event.metaKey && !event.repeat) {
     event.preventDefault();
-    resetAmbientVideoStart();
+    resetMainVideoStart();
   }
   if (event.key === 'Escape' && active === 'player') showScreen('gallery');
 });
@@ -284,5 +284,5 @@ $('recordButton').addEventListener('click', () => recorder?.state === 'recording
 $('photoButton').addEventListener('click', takePhoto);
 ['pointermove', 'pointerdown', 'click', 'keydown', 'touchstart'].forEach((event) => document.addEventListener(event, noteActivity, { passive: true }));
 document.addEventListener('visibilitychange', () => { if (document.hidden && recorder?.state === 'recording') stopRecording(); });
-document.addEventListener('visibilitychange', () => { if (!document.hidden) syncAmbientVideo(true); });
-window.addEventListener('pageshow', () => syncAmbientVideo(true));
+document.addEventListener('visibilitychange', () => { if (!document.hidden) syncMainVideo(true); });
+window.addEventListener('pageshow', () => syncMainVideo(true));
