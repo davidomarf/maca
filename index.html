@@ -10,14 +10,14 @@
 <body>
   <main id="app" class="app">
     <video id="ambient" class="ambient" autoplay muted loop playsinline aria-hidden="true">
-      <source src="assets/ambient-loop.mp4" type="video/mp4">
+      <source src="src/main.mp4" type="video/mp4">
     </video>
     <div id="wallpaper" class="wallpaper" aria-hidden="true"></div>
     <div class="ambient-fallback" aria-hidden="true"></div>
     <div class="grain" aria-hidden="true"></div>
     <div class="shell">
       <section id="attract" class="screen attract-screen" aria-label="Video principal">
-        <video class="main-loop" autoplay muted loop playsinline aria-label="Video principal en repetición"><source src="assets/ambient-loop.mp4" type="video/mp4"></video>
+        <video class="main-loop" autoplay muted loop playsinline aria-label="Video principal en repetición"><source src="src/main.mp4" type="video/mp4"></video>
       </section>
 
       <section id="home" class="screen home-screen hidden" aria-label="Menú principal">
@@ -42,6 +42,6 @@
       <div id="toast" class="toast" role="status" aria-live="polite"></div>
     </div>
   </main>
-  <script src="app.js?v=3"></script>
+  <script src="app.js?v=4"></script>
 </body>
 </html>

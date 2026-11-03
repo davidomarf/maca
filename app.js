@@ -17,12 +17,8 @@ function loadAmbientStartTime() {
 }
 let ambientStartedAt = loadAmbientStartTime();
 const clips = [
-  ['01', 'VIDEO 01', 'video-01.mp4', '✿', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'],
-  ['02', 'VIDEO 02', 'video-02.mp4', '◉', 'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'],
-  ['03', 'VIDEO 03', 'video-03.mp4', '❋', 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.'],
-  ['04', 'VIDEO 04', 'video-04.mp4', '⌘', 'Duis aute irure dolor in reprehenderit in voluptate velit esse.'],
-  ['05', 'VIDEO 05', 'video-05.mp4', '✺', 'Excepteur sint occaecat cupidatat non proident, sunt in culpa.'],
-  ['06', 'VIDEO 06', 'video-06.mp4', '❂', 'Curabitur blandit tempus porttitor. Nullam quis risus eget urna mollis.'],
+  ['01', 'VIDEO 01', '1.mp4', '✿', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'],
+  ['02', 'VIDEO 02', '2.mp4', '◉', 'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'],
 ];
 const galleryGrid = $('galleryGrid');
 let active = 'attract', idleTimeout, playerCloseTimeout, attractTransitionTimeout, attractFadeTimeout;
@@ -244,11 +240,12 @@ function playClip(title, filename) {
 }
 
 function syncAmbientVideo(force = false) {
-  const video = document.querySelector('.main-loop');
-  if (!video || !Number.isFinite(video.duration) || video.duration <= 0) return;
-  const targetTime = ((Date.now() - ambientStartedAt) / 1000 % video.duration + video.duration) % video.duration;
-  if (!force && Math.abs(video.currentTime - targetTime) < 1.5) return;
-  try { video.currentTime = targetTime; } catch (error) { /* Metadata may not be seekable yet. */ }
+  document.querySelectorAll('.main-loop, #ambient').forEach((video) => {
+    if (!Number.isFinite(video.duration) || video.duration <= 0) return;
+    const targetTime = ((Date.now() - ambientStartedAt) / 1000 % video.duration + video.duration) % video.duration;
+    if (!force && Math.abs(video.currentTime - targetTime) < 1.5) return;
+    try { video.currentTime = targetTime; } catch (error) { /* Metadata may not be seekable yet. */ }
+  });
 }
 
 function resetAmbientVideoStart() {
@@ -264,9 +261,10 @@ function revealPlayerClose() {
 }
 
 $('wallpaper').style.backgroundImage = `url('assets/backgrounds/web/${screenBackgrounds.attract}')`;
-const mainLoop = document.querySelector('.main-loop');
-mainLoop?.addEventListener('loadedmetadata', () => syncAmbientVideo(true), { once: true });
-if (mainLoop?.readyState >= 1) syncAmbientVideo(true);
+document.querySelectorAll('.main-loop, #ambient').forEach((video) => {
+  video.addEventListener('loadedmetadata', () => syncAmbientVideo(true), { once: true });
+  if (video.readyState >= 1) syncAmbientVideo(true);
+});
 $('attract').addEventListener('pointerdown', noteActivity, { passive: true });
 $('attract').addEventListener('click', noteActivity, { passive: true });
 $('openGallery').addEventListener('click', () => showScreen('gallery'));
