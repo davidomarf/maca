@@ -261,7 +261,7 @@ function revealPlayerClose() {
 }
 
 $('wallpaper').style.backgroundImage = `url('assets/backgrounds/web/${screenBackgrounds.attract}')`;
-if (location.protocol === 'file:') $('downloadPackage').hidden = true;
+if (location.protocol === 'https:') $('downloadPackage').hidden = false;
 const mainVideo = document.querySelector('.main-loop');
 mainVideo?.addEventListener('loadedmetadata', () => syncMainVideo(true), { once: true });
 if (mainVideo?.readyState >= 1) syncMainVideo(true);
