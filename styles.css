@@ -79,6 +79,5 @@ button:active{cursor:url('assets/cursor-48.png') 8 8,pointer}
 #home .choice-grid{display:flex;justify-content:center;align-items:center}
 #home .choice-card{width:min(570px,100%)}
 .photo-button .control-icon{width:26px;height:26px;filter:brightness(.72) saturate(1.8) contrast(1.2) drop-shadow(1px 2px #102a3e)}
-.icon-button .back-icon{display:block;width:32px;height:28px;object-fit:contain;filter:drop-shadow(1px 2px #2b281e)}
 #capture.capture-transition-in{opacity:0;pointer-events:none;transition:opacity .9s ease;animation:none}
 #capture.capture-transition-in.capture-transition-visible{opacity:1;pointer-events:auto}

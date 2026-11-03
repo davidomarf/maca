@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#aaa18a">
   <title>Compostaje fílmico y formas de encuentro</title>
-  <link rel="stylesheet" href="styles.css?v=29">
+  <link rel="stylesheet" href="styles.css?v=30">
 </head>
 <body>
   <main id="app" class="app attract-mode">
@@ -33,7 +33,7 @@
       </section>
 
       <section id="capture" class="screen capture-screen hidden" aria-label="Microscopio">
-        <div class="capture-top"><button type="button" class="icon-button" data-attract aria-label="Volver"><img class="back-icon" src="assets/ui/back.svg" alt=""></button></div>
+        <div class="capture-top" aria-hidden="true"></div>
         <div class="camera-frame"><video id="camera" autoplay muted playsinline></video><canvas id="photoCanvas" hidden></canvas><div class="camera-placeholder" id="cameraPlaceholder"><img class="placeholder-spinner" src="assets/B.png" alt=""><p>PREPARANDO CÁMARA</p><small>Conectando microscopio</small></div><div class="record-indicator hidden" id="recordIndicator"><i></i> GRABANDO <b id="timer">00:00</b></div></div>
         <div class="capture-controls"><div class="control-buttons"><button type="button" id="recordButton" class="capture-button record-button"><img class="control-icon" id="recordIcon" src="assets/ui/record.png" alt=""><span id="recordLabel">VIDEO</span></button><button type="button" id="photoButton" class="capture-button photo-button"><img class="control-icon" src="assets/ui/photo.png?v=2" alt=""><span>FOTO</span></button></div></div>
       </section>
@@ -42,6 +42,6 @@
       <div id="toast" class="toast" role="status" aria-live="polite"></div>
     </div>
   </main>
-  <script src="app.js?v=15"></script>
+  <script src="app.js?v=17"></script>
 </body>
 </html>

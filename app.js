@@ -114,7 +114,7 @@ function armIdleTimer() {
   idleTimeout = setTimeout(() => {
     if (active === 'capture' && recorder?.state === 'recording') stopRecording();
     showScreen('attract');
-  }, 5 * 60 * 1000);
+  }, 60 * 1000);
 }
 function noteActivity(event) {
   if (active === 'attract') {
@@ -311,7 +311,6 @@ $('attract').addEventListener('click', noteActivity, { passive: true });
 $('openGallery')?.addEventListener('click', () => showScreen('gallery'));
 $('openCapture').addEventListener('click', () => showScreen('capture'));
 document.querySelectorAll('[data-home]').forEach((button) => button.addEventListener('click', () => showScreen('home')));
-document.querySelectorAll('[data-attract]').forEach((button) => button.addEventListener('click', () => showScreen('attract')));
 document.querySelectorAll('[data-gallery]').forEach((button) => button.addEventListener('click', () => showScreen('gallery')));
 $('closePlayer').addEventListener('click', () => showScreen('gallery'));
 $('player').addEventListener('pointermove', revealPlayerClose, { passive: true });
